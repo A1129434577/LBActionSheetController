@@ -45,7 +45,6 @@
         _titleFont = [UIFont systemFontOfSize:14];
         _titleColor = [UIColor grayColor];
         _defaultTextFont = [UIFont boldSystemFontOfSize:16];
-        _defaultTextColor = [UIColor blackColor];
         _cancelTextFont = [UIFont boldSystemFontOfSize:16];
         _cancelTextColor = [UIColor redColor];
         
@@ -68,7 +67,6 @@
         UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 0)];
         tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         tableView.clipsToBounds = YES;
-        tableView.backgroundColor = [UIColor whiteColor];
         tableView.scrollEnabled = NO;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.estimatedSectionFooterHeight = 0;
@@ -153,22 +151,30 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section) {
-        return 15;
+        NSMutableArray<NSDictionary *> *secondArray = self.actionArray[1];
+        return secondArray.count?15:CGFLOAT_MIN;
     }
-    return 0.0001;
+    return CGFLOAT_MIN;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     
-    return 0.0001;
+    return CGFLOAT_MIN;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *sectionFooterV = [[UIView alloc] init];
+    UIView *sectionHeaderV = [[UIView alloc] init];
+    sectionHeaderV.backgroundColor = [UIColor groupTableViewBackgroundColor];
     if (@available(iOS 13.0, *)) {
-        sectionFooterV.backgroundColor = [UIColor systemGroupedBackgroundColor];
-    } else {
-        sectionFooterV.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        UIColor *backgroundColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor systemGroupedBackgroundColor];
+            }
+            else {
+                return [UIColor blackColor];
+            }
+        }];
+        sectionHeaderV.backgroundColor = backgroundColor;
     }
-    return sectionFooterV;
+    return sectionHeaderV;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
