@@ -66,6 +66,9 @@
     if (_tableView == nil) {
         UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 0)];
         tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        if (@available(iOS 15.0, *)) {
+            tableView.sectionHeaderTopPadding = 0;
+        }
         tableView.clipsToBounds = YES;
         tableView.scrollEnabled = NO;
         tableView.estimatedSectionHeaderHeight = 0;
